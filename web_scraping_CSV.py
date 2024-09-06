@@ -37,7 +37,7 @@ with open('icc_t20_worldcup_2022_23_matches plus links.csv', 'w', newline='', en
     tags = soup.find_all('tr', class_ ="")
     tags.remove(tags[0])
     for teams in tags:
-        teams= teams.find_all('td',class_="ds-min-w-max")
+        teams= teams.find_all('td')
         team1 = teams[0].find('span').text.strip()
         team2 = teams[1].find('span').text.strip()
         winner = teams[2].find('span').text.strip()
@@ -45,8 +45,8 @@ with open('icc_t20_worldcup_2022_23_matches plus links.csv', 'w', newline='', en
         Ground = teams[4].find('span').text.strip()
         Match_date = teams[5].find('span').text.strip()
         scorecard = teams[6].find('span').text.strip()
-        if teams[6].find('a')['href']!=None:
-            link= teams[6].find('a')['href']  # لینک نمره
+        link= teams[6].find('a')['href']  # لینک نمره
+        new_link = "https://www.espncricinfo.com/"+link
 
         print(team1,'/',team2,'/',winner,'/',Margin,'/',Ground,'/',Match_date,'/',scorecard, '/', link)
         csvwriter.writerow([team1, team2, winner, Margin, Ground, Match_date, scorecard, new_link])
