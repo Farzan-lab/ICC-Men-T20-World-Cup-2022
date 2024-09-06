@@ -2,27 +2,29 @@ import csv
 from bs4 import BeautifulSoup
 import requests
 
-# ارسال درخواست به URL و دریافت پاسخ
 html_req = requests.get('https://www.espncricinfo.com/series/icc-men-s-t20-world-cup-2022-23-1298134/england-vs-pakistan-final-1298179/full-scorecard')
 soup = BeautifulSoup(html_req.text, 'lxml')
 print(html_req)
 
-# یافتن جدول بازیکنان
 tables = soup.find_all('table')
+table_batting = []
+table_bowling = []
+table_batting.append(tables[0])
+table_bowling.append(tables[1])
+table_batting.append(tables[2])
+table_bowling.append(tables[3])
 
-# برای هر جدول، اطلاعات را استخراج کنید
-for table in tables:
+for table in table_batting:
     rows = table.find_all('tr')
     for row in rows:
-        # فیلتر کردن ردیف‌های مخفی
         if 'hidden' in row.get('class', []) or 'display:none' in row.get('style', ''):
-            continue  # این ردیف را نادیده بگیر
+            continue  
 
         columns = row.find_all('td')
-        if len(columns) >= 7:  # اطمینان از اینکه ردیف دارای حداقل 7 ستون است
-            # فیلتر کردن ستون‌های مخفی
+        if len(columns) >= 7:  
+
             if any('hidden' in col.get('class', []) or 'display:none' in col.get('style', '') for col in columns):
-                continue  # این ردیف را نادیده بگیر
+                continue  
 
             player_name = columns[0].text.strip()
             r = columns[2].text.strip()
@@ -32,6 +34,33 @@ for table in tables:
             sixes = columns[6].text.strip()
             sr = columns[7].text.strip()
             
-            # چاپ اطلاعات
             print(f"Player: {player_name}, R: {r}, B: {b}, M: {m}, 4s: {fours}, 6s: {sixes}, SR: {sr}")
-            # print(f"Player: {player_name}, R: {r}, B: {b}, 4s: {fours}, 6s: {sixes}, SR: {sr}")
+
+print("bowling table:")
+for table in table_bowling:
+    rows = table.find_all('tr')
+    for row in rows:
+        if 'hidden' in row.get('class', []) or 'display:none' in row.get('style', ''):
+                continue  
+
+        columns = row.find_all('td')
+        if len(columns) >= 7:  
+
+            if any('hidden' in col.get('class', []) or 'display:none' in col.get('style', '') for col in columns):
+                continue  
+
+            player_name = columns[0].text.strip()
+            o = columns[1].text.strip()
+            m = columns[2].text.strip()
+            r = columns[3].text.strip()
+            w = columns[4].text.strip()
+            ECON = columns[5].text.strip() 
+            zero = columns[6].text.strip()
+            fourth = columns[7].text.strip()
+            sixth = columns[8].text.strip()
+            wd = columns[9].text.strip()
+            nb = columns[10].text.strip()
+
+            # WD = columns[9].text.strip()
+            
+            print(f"Player: {player_name}, R: {o}, B: {m}, M: {r}, w: {w}, Econ: {ECON}, 0s: {zero}, 4s: {fourth}, 6s: {sixth}, wd: {wd}, NB: {nb}")
